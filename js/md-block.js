@@ -13,17 +13,7 @@ export const URLs = {
 }
 
 // Fix indentation
-function deIndent(text) {
-  let indent = text.match(/^[\r\n]*([\t ]+)/);
-
-  if (indent) {
-    indent = indent[1];
-
-    text = text.replace(RegExp("^" + indent, "gm"), "");
-  }
-
-  return text;
-}
+const { deIndent } = await import("./helpers.js");
 
 export class MarkdownElement extends HTMLElement {
   constructor() {
