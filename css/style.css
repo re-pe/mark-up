@@ -194,6 +194,14 @@ nav {
   background: hsl(var(--main-color-hs) 65%);
 }
 
+nav>span {
+  flex: 1;
+  padding: 0.4em 0.5em;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
 nav>a {
   flex: 1;
   padding: 0.4em 0.5em;
@@ -210,8 +218,6 @@ nav>a:hover {
 nav>a:where(:not(:hover)) {
   text-decoration: none;
 }
-
-#repl {}
 
 #repl_container {
   display: grid;
@@ -232,8 +238,6 @@ nav>a:where(:not(:hover)) {
   letter-spacing: -0.03em;
   overflow: hidden;
 }
-
-#repl_container>* {}
 
 #repl_container>[data-title]::before {
   content: attr(data-title);
