@@ -54,7 +54,7 @@ body > header {
 		width: 1em;
 		height: 1em;
 		margin-right: .1em;
-		background: url(logo.svg) center / contain no-repeat;
+		background: url(../img/logo.svg) center / contain no-repeat;
 		transition: .4s;
 		filter: drop-shadow(0 0 white);
 	}
