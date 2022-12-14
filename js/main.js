@@ -1,6 +1,6 @@
-import './bliss.js';
-import './prism.js';
-import './prism-live.js';
+import './lib/bliss.js';
+import './lib/prism.js';
+import './lib/prism-live.js';
 
 const { splitPathName } = await import("./helpers.js");
 const fileName = splitPathName().fileName;

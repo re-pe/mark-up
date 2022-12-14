@@ -1,6 +1,6 @@
 import { URLs, MarkdownBlock, MarkdownSpan, MarkdownElement } from "./md-block.js";
 
-import create from "./blissv2/dom/create.js"; //"https://v2.blissfuljs.com/src/dom/create.js";
+import create from "./lib/blissv2/dom/create.js"; //"https://v2.blissfuljs.com/src/dom/create.js";
 
 // const importURL = new URL("md-block.js", location) + "";
 const importURL = "./md-block.js";
