@@ -1,7 +1,5 @@
 <!-- markdownlint-disable-next-line MD026 -->
-# Only experiments with md-block. Not for use in development!
-
-For orginal repository [go to](https://github.com/LeaVerou/md-block).
+# Some experiments with [md-block](https://github.com/LeaVerou/md-block). Not for use in development!
 
 ***Original readme:***
 
