@@ -1,8 +1,7 @@
 import { URLs, MarkdownBlock, MarkdownSpan, MarkdownElement } from "./md-block.js";
 
-import create from "./lib/blissv2/dom/create.js"; //"https://v2.blissfuljs.com/src/dom/create.js";
+import create from "./lib/blissv2/dom/create.js";
 
-// const importURL = new URL("md-block.js", location) + "";
 const importURL = "./md-block.js";
 let js = `import {MarkdownBlock, MarkdownSpan, MarkdownElement} from "${importURL}";`;
 
@@ -65,7 +64,7 @@ for (let script of document.querySelectorAll("script[type='text/html'].md-block-
   });
 }
 
-import * as Stretchy from "https://stretchy.verou.me/dist/stretchy.min.js";
+import * as Stretchy from "./lib/stretchy.js";
 Stretchy.selectors.filter = "#repl *";
 Stretchy.init();
 
