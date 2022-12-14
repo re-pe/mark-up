@@ -9,7 +9,6 @@ if ( fileName === 'index.html') {
   import('./md-block.js')
 } else if ( fileName === 'index-adoc.html') {
   import('./ascii-doc.js');
-  console.log('./ascii-doc.js');
 } else if ( fileName === 'index-mrkd.html') {
   import('./demo.js');
 }

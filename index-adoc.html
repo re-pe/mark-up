@@ -15,10 +15,10 @@
   <header>
     <h1>&lt;ascii-doc></h1>
 
-    <md-block>
-      Render styleable Markdown in your HTML.
-      Uses [Asciidoctor](https://asciidoctor.org/) under the hood.
-    </md-block>
+    <ascii-doc>
+      Render AsciiDoc in your HTML.
+      Uses https://asciidoctor.org/[AsciiDoctor].
+    </ascii-doc>
   </header>
 
   <nav>
@@ -31,14 +31,26 @@
   </nav>
 
   <main>
+    <ascii-doc>
+      Render AsciiDoc in your HTML.
+      Uses https://asciidoctor.org/[AsciiDoctor].
+
+      * [*] checked
+      * [x] also *checked*
+      * [ ] not _checked_
+      * normal [.underline]#list item#
+    </ascii-doc>
+    <ascii-doc src="extended_syntax1.adoc">
+      https://github.com/leaverou/md-block/#readme[Documentation on GitHub]
+    </ascii-doc>
+
   </main>
 
   <footer>
-    <md-span>
-      Made in haste, by [Lea Verou](https://lea.verou.me).
-      Modified by [re-pesk](https://github.com/re-pesk). Use at your own risk.
-      [Pull requests welcome](https://github.com/leaverou/md-block)
-    </md-span>
+    <ascii-doc>
+      Made in haste, by https://lea.verou.me[Lea Verou]. Use at your own risk.
+      https://github.com/leaverou/md-block[Pull requests welcome]
+    </ascii-doc>
   </footer>
 </body>
 
