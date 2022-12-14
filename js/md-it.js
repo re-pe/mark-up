@@ -3,19 +3,18 @@
  * @author Lea Verou
  */
 
-let marked = window.marked;
-let DOMPurify = window.DOMPurify;
+const mdParser = (await import('./prepareMarkdownIt.js')).mdParser;
+const DOMPurify = (await import('./lib/purify.es.js')).default;
 let Prism = window.Prism;
 
 export const URLs = {
-  marked: "./lib/marked.esm.js",
+  MarkdownIt: "./prepareMarkdownIt.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
-// Fix indentation
 const { deIndent } = await import("./helpers.js");
 
-export class MarkdownElement extends HTMLElement {
+export class MdItElement extends HTMLElement {
   constructor() {
     super();
 
@@ -55,6 +54,7 @@ export class MarkdownElement extends HTMLElement {
     }
 
     this.render();
+
   }
 
   async render() {
@@ -62,25 +62,11 @@ export class MarkdownElement extends HTMLElement {
       return;
     }
 
-    if (!marked) {
-      marked = import(URLs.marked).then(m => m.marked);
-    }
-
-    marked = await marked;
-
-    marked.setOptions({
-      gfm: true,
-      smartypants: true,
-      langPrefix: "language-",
-    });
-
-    marked.use({ renderer: this.renderer });
-
     let html = this._parse();
 
     if (this.untrusted) {
       let mdContent = this._mdContent;
-      html = await MarkdownElement.sanitize(html);
+      html = await MdItElement.sanitize(html);
       if (this._mdContent !== mdContent) {
         // While we were running this async call, the content changed
         // We don’t want to overwrite with old data. Abort mission!
@@ -119,23 +105,21 @@ export class MarkdownElement extends HTMLElement {
   }
 
   static async sanitize(html) {
-    if (!DOMPurify) {
-      DOMPurify = import(URLs.DOMPurify).then(m => m.default);
-    }
 
-    DOMPurify = await DOMPurify; // in case it's still loading
+    await DOMPurify; // in case it's still loading
 
     return DOMPurify.sanitize(html);
   }
 };
 
-export class MarkdownSpan extends MarkdownElement {
+export class MdItSpan extends MdItElement {
   constructor() {
     super();
   }
 
   _parse() {
-    return marked.parseInline(this._mdContent);
+    const _mdParser = mdParser;
+    return _mdParser.render(this._mdContent);
   }
 
   static renderer = {
@@ -155,7 +139,7 @@ export class MarkdownSpan extends MarkdownElement {
   }
 }
 
-export class MarkdownBlock extends MarkdownElement {
+export class MdItBlock extends MdItElement {
   constructor() {
     super();
   }
@@ -185,7 +169,8 @@ export class MarkdownBlock extends MarkdownElement {
   }
 
   _parse() {
-    return marked.parse(this._mdContent);
+    const _mdParser = mdParser;
+    return _mdParser.render(this._mdContent);
   }
 
   static renderer = Object.assign({
@@ -214,9 +199,9 @@ export class MarkdownBlock extends MarkdownElement {
       }
 
       return `
-				<h${level} id="${id}">
-					${content}
-				</h${level}>`;
+        <h${level} id="${id}">
+          ${content}
+        </h${level}>`;
     },
 
     code(code, language, escaped) {
@@ -232,7 +217,7 @@ export class MarkdownBlock extends MarkdownElement {
 
       return `<pre class="language-${language}"><code>${code}</code></pre>`;
     }
-  }, MarkdownSpan.renderer);
+  }, MdItSpan.renderer);
 
   static get observedAttributes() {
     return ["src", "hmin", "hlinks"];
@@ -287,5 +272,5 @@ export class MarkdownBlock extends MarkdownElement {
 }
 
 
-customElements.define("md-block", MarkdownBlock);
-customElements.define("md-span", MarkdownSpan);
+customElements.define("mdit-block", MdItBlock);
+customElements.define("mdit-span", MdItSpan);
