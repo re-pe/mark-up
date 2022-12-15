@@ -1,8 +1,8 @@
-import { URLs, MdItBlock, MdItSpan, MdItElement } from "./md-it.js";
+import { URLs, MdItBlock, MdItSpan, MdItElement } from "./mdit-block.js";
 
 import create from "./lib/blissv2/dom/create.js";
 
-const importURL = "./md-it.js";
+const importURL = "./mdit-block.js";
 let js = `import { MdItBlock, MdItSpan, MdItElement } from "${importURL}";`;
 
 for (let script of document.querySelectorAll("script[type='text/html'].md-block-demo")) {

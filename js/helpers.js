@@ -11,6 +11,10 @@ export function deIndent(text) {
   return text;
 }
 
+export function getApplicationName() {
+  const meta = document.querySelector('meta[name="application-name"]');
+  return meta.getAttribute('content');
+}
 
 export async function require(path) {
   let _module = window.module;
@@ -29,4 +33,4 @@ export function splitPathName() {
   return { path, fileName };
 }
 
-export default { deIndent, require, splitPathName };
+export default { deIndent, getApplicationName, require, splitPathName };
