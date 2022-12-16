@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="application-name" content="demo-remark" />
   <title>md-block: Render styleable Markdown in your HTML</title>
   <link rel="icon" href="img/logo.svg" />
@@ -13,13 +13,14 @@
 </head>
 
 <body>
+
   <header>
     <h1>&lt;md-block></h1>
 
-    <md-block>
+    <remark-doc>
       Render styleable Markdown in your HTML.
-      Uses [marked](https://marked.js.org/) under the hood.
-    </md-block>
+      Uses [remark](https://remark.js.org/) under the hood.
+    </remark-doc>
   </header>
 
   <nav>
@@ -32,71 +33,72 @@
   </nav>
 
   <main>
-    <md-block src="README.md" hmin="2">
+
+    <remark-doc src="README.md" hmin="2">
       [Documentation on GitHub](https://github.com/leaverou/md-block/#readme)
-    </md-block>
+    </remark-doc>
 
     <section>
       <h2 id="demos">Demos</h2>
 
       <p>Block</p>
 
-      <script type="text/html" class="md-block-demo">
-        <md-block>
-        # Heading
+      <div class="wrap">
+        <remark-doc>
+          # Heading
 
-        Text **bold text** *italic text* ~strike~
+          Text **bold text** *italic text* ~strike~
 
-        ```js
-        test.foo();
-        ```
+          ```js
+          test.foo();
+          ```
 
-        ```html
-        &lt;foo>
-        ```
+          ```html
+          &lt;foo>
+          ```
 
           * List item 1
           * List item 2
-        </md-block>
-      </script>
+        </remark-doc>
+      </div>
 
       <p>Block with incorrect src and fallback content</p>
 
-      <script type="text/html" class="md-block-demo">
-        <md-block src="nonexistent.md">
-          `nonexistent.md` was *not* found
-        </md-block>
-      </script>
+      <div class="wrap">
+        <remark-doc src="nonexistent.md">
+          `nonexistent.md` was *not* found &nbsp;
+        </remark-doc>
+      </div>
 
       <p>Minimum heading level:</p>
 
-      <script type="text/html" class="md-block-demo">
-        <md-block hmin="3">
+      <div class="wrap">
+        <remark-doc hmin="3">
           # Heading 3
           ## Heading 4
           ### Heading 5
           #### Heading 6
           ##### Still heading 6
-        </md-block>
-      </script>
+        </remark-doc>
+      </div>
 
       <p>Heading links</p>
-      <script type="text/html" class="md-block-demo">
-        <md-block hlinks>
+      <div class="wrap">
+        <remark-doc hlinks>
           # Heading 1
           ## Heading 2
           ### Heading 3
-        </md-block>
-        <md-block hlinks="§">
+        </remark-doc>
+        <remark-doc hlinks="§">
           # Heading 1
           ## Heading 2
           ### Heading 3
-        </md-block>
-      </script>
+        </remark-doc>
+      </div>
 
       <p>Inline. Note that block level syntax like headings, code blocks, or lists is not processed</p>
 
-      <script type="text/html" class="md-block-demo">
+      <div class="wrap">
         <md-span>
           # Heading
 
@@ -113,27 +115,19 @@
           * List item 1
           * List item 2
         </md-span>
-      </script>
+      </div>
 
-      <md-block>With and without [sanitization](#handling-untrusted-content).</md-block>
+      <remark-doc>With and without [sanitization](#handling-untrusted-content).</remark-doc>
 
-      <script type="text/html" class="md-block-demo">
-        <md-block untrusted src="data:text/markdown,A [Click me](javascript:alert('hi'))"></md-block>
-        <md-block src="data:text/markdown,B [Click me](javascript:alert('hi'))"></md-block>
-      </script>
+      <div class="wrap">
+        <remark-doc untrusted src="data:text/markdown,A [Click me](javascript:alert('hi'))"></remark-doc>
+        <remark-doc src="data:text/markdown,B [Click me](javascript:alert('hi'))"></remark-doc>
+      </div>
 
       <p>View source for more demos!</p>
     </section>
 
   </main>
-
-  <section id="repl">
-    <h2>Live demo</h2>
-    <form id="repl_container"><pre data-title="Input HTML"><code><span class="token punctuation">&lt;</span><select name="tag" class="token tag"><option>md-block</option><option>md-span</option></select> <input name="attributes" placeholder="foo=&quot;bar&quot; baz=&quot;quux&quot;"><span class="token punctuation">&gt;</span><textarea name="contents" class="prism-live language-markdown">*This* is `md-block`</textarea><span class="token punctuation">&lt;/</span><output class="token tag" id="end_tag"></output><span class="token punctuation">&gt;</span></code></pre>
-      <output id="output_html" data-title="Output HTML"><pre class="language-markup"><code></code></pre></output>
-      <output id="rendering" data-title="Rendering"></output>
-    </form>
-  </section>
 
   <footer>
     <md-span>
@@ -141,6 +135,7 @@
       [Pull requests welcome](https://github.com/leaverou/md-block)
     </md-span>
   </footer>
+
 </body>
 
 </html>

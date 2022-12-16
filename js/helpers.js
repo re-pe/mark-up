@@ -16,6 +16,15 @@ export function getApplicationName() {
   return meta.getAttribute('content');
 }
 
+export async function require(path) {
+  let _module = window.module;
+  window.module = {};
+  await import(path);
+  let exports = module.exports;
+  window.module = _module; // restore global
+  return exports;
+}
+
 export function splitPathName() {
   const pathName = window.location.pathname;
   const pathArray = pathName.split('/');
@@ -24,4 +33,4 @@ export function splitPathName() {
   return { path, fileName };
 }
 
-export default { deIndent, getApplicationName, splitPathName };
+export default { deIndent, getApplicationName, require, splitPathName };
