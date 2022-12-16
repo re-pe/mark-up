@@ -3,12 +3,13 @@
  * @author Lea Verou
  */
 
-let marked = window.marked;
-let DOMPurify = window.DOMPurify;
+const mdParser = (await import('./prepareMarked.js')).mdParser;
+const DOMPurify = (await import('./lib/purify.es.js')).default;
+
 let Prism = window.Prism;
 
 export const URLs = {
-  marked: "./lib/marked.esm.js",
+  mdParser: "./lib/marked.esm.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
@@ -24,6 +25,8 @@ export class MarkdownElement extends HTMLElement {
     for (let property in this.renderer) {
       this.renderer[property] = this.renderer[property].bind(this);
     }
+
+    this._parser = mdParser;
   }
 
   get rendered() {
@@ -61,20 +64,6 @@ export class MarkdownElement extends HTMLElement {
     if (!this.isConnected || this._mdContent === undefined) {
       return;
     }
-
-    if (!marked) {
-      marked = import(URLs.marked).then(m => m.marked);
-    }
-
-    marked = await marked;
-
-    marked.setOptions({
-      gfm: true,
-      smartypants: true,
-      langPrefix: "language-",
-    });
-
-    marked.use({ renderer: this.renderer });
 
     let html = this._parse();
 
@@ -119,11 +108,7 @@ export class MarkdownElement extends HTMLElement {
   }
 
   static async sanitize(html) {
-    if (!DOMPurify) {
-      DOMPurify = import(URLs.DOMPurify).then(m => m.default);
-    }
-
-    DOMPurify = await DOMPurify; // in case it's still loading
+    await DOMPurify; // in case it's still loading
 
     return DOMPurify.sanitize(html);
   }
@@ -135,7 +120,8 @@ export class MarkdownSpan extends MarkdownElement {
   }
 
   _parse() {
-    return marked.parseInline(this._mdContent);
+    this._parser.use({ renderer: this.renderer });
+    return this._parser.parseInline(this._mdContent);
   }
 
   static renderer = {
@@ -185,7 +171,8 @@ export class MarkdownBlock extends MarkdownElement {
   }
 
   _parse() {
-    return marked.parse(this._mdContent);
+    this._parser.use({ renderer: this.renderer });
+    return this._parser.parse(this._mdContent);
   }
 
   static renderer = Object.assign({
