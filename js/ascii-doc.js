@@ -1,4 +1,4 @@
-import { asciidoctor, asciidoctorExtensions } from './asciidoctorPrepare.js';
+import { asciidoctor, asciidoctorExtensions } from './prepareAsciidoctor.js';
 
 
 const { deIndent } = await import('./helpers.js');
