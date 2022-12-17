@@ -23,6 +23,8 @@ export class MdItElement extends HTMLElement {
     for (let property in this.renderer) {
       this.renderer[property] = this.renderer[property].bind(this);
     }
+
+    this._parser = mdParser;
   }
 
   get rendered() {
@@ -118,8 +120,7 @@ export class MdItSpan extends MdItElement {
   }
 
   _parse() {
-    const _mdParser = mdParser;
-    return _mdParser.render(this._mdContent);
+    return this._parser.renderInline(this._mdContent);
   }
 
   static renderer = {
@@ -169,8 +170,7 @@ export class MdItBlock extends MdItElement {
   }
 
   _parse() {
-    const _mdParser = mdParser;
-    return _mdParser.render(this._mdContent);
+    return this._parser.render(this._mdContent);
   }
 
   static renderer = Object.assign({
@@ -184,8 +184,7 @@ export class MdItBlock extends MdItElement {
       if (hlinks === null) {
         // No heading links
         content = text;
-      }
-      else {
+      } else {
         content = `<a href="#${id}" class="anchor">`;
 
         if (hlinks === "") {

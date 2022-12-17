@@ -28,25 +28,9 @@ const moduleData = [
   // { name: 'YAML', url: "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.mjs", f: m => m },
 ]
 
-const moduleDataToImport = Object.values(moduleData.filter(module => module.type !== 'cjs'))
-const moduleNamesToImport = moduleDataToImport.map(module => module.name)
+const { loadModules } = await import("./helpers.js")
 
-const importPromises = moduleDataToImport.map((module) => import(module.url).then(module.f))
-const importModuleData = await Promise.all(importPromises)
-
-const importModules = Object.fromEntries(moduleNamesToImport.map((_, i) => [moduleNamesToImport[i], importModuleData[i]]))
-
-const moduleDataToRequire = Object.values(moduleData.filter(module => module.type === 'cjs'))
-const moduleNamesToRequire = moduleDataToRequire.map(module => module.name)
-
-const { require } = await import("./helpers.js");
-
-const requirePromises = moduleDataToRequire.map((module) => require(module.url))
-const requireModuleData = await Promise.all(requirePromises)
-
-const requireModules = Object.fromEntries(moduleNamesToRequire.map((_, i) => [moduleNamesToRequire[i], requireModuleData[i]]))
-
-const modules = Object.assign({}, importModules, requireModules)
+const modules = await loadModules(moduleData)
 
 modules.Replacements.replacements.push({
   name: 'allcaps',
@@ -106,6 +90,7 @@ export const mdParser = new MarkdownIt({
     })
   })
   .use(modules.Toc)
+  .disable('anchor');
 // .use(TocDoneRight)
 
 export default { mdParser };
