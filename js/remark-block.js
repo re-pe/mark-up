@@ -3,26 +3,25 @@
  * @author Lea Verou
  */
 
-let marked = window.marked;
-let DOMPurify = window.DOMPurify;
+const { h, loadParser, modules } = await import('./prepareRemark.js');
+const DOMPurify = (await import('./lib/purify.es.js')).default;
 let Prism = window.Prism;
 
 export const URLs = {
-  marked: "./lib/marked.esm.js",
+  mdParser: "./prepareRemark.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
-// Fix indentation
 const { deIndent } = await import("./helpers.js");
 
-export class MarkdownElement extends HTMLElement {
+export class RemarkElement extends HTMLElement {
   constructor() {
     super();
 
-    this.renderer = Object.assign({}, this.constructor.renderer);
+    this.parsingOptions = Object.assign({}, this.constructor.parsingOptions);
 
-    for (let property in this.renderer) {
-      this.renderer[property] = this.renderer[property].bind(this);
+    for (let property in this.parsingOptions) {
+      this.parsingOptions[property] = this.parsingOptions[property].bind(this);
     }
   }
 
@@ -62,25 +61,21 @@ export class MarkdownElement extends HTMLElement {
       return;
     }
 
-    if (!marked) {
-      marked = import(URLs.marked).then(m => m.marked);
+    if (!this._parser) {
+      this._parser = await loadParser();
     }
 
-    marked = await marked;
+    this.parsingOptions.setMinimalHeaderLevel();
+    this.parsingOptions.setAnchor();
+    this._parser = this._parser()
+      .use(modules.rehypeSanitize)
+      .use(modules.rehypeStringify);
 
-    marked.setOptions({
-      gfm: true,
-      smartypants: true,
-      langPrefix: "language-",
-    });
-
-    marked.use({ renderer: this.renderer });
-
-    let html = this._parse();
+    let html = await this._parse();
 
     if (this.untrusted) {
       let mdContent = this._mdContent;
-      html = await MarkdownElement.sanitize(html);
+      html = await RemarkElement.sanitize(html);
       if (this._mdContent !== mdContent) {
         // While we were running this async call, the content changed
         // We don’t want to overwrite with old data. Abort mission!
@@ -118,44 +113,49 @@ export class MarkdownElement extends HTMLElement {
     this.dispatchEvent(event);
   }
 
-  static async sanitize(html) {
-    if (!DOMPurify) {
-      DOMPurify = import(URLs.DOMPurify).then(m => m.default);
-    }
+  static parsingOptions = {
+    setAnchor() {
+      const hlinks = this.hlinks ?? null;
 
-    DOMPurify = await DOMPurify; // in case it's still loading
+      if (hlinks !== null) {
+        if (hlinks === "") {
+          this._parser = this._parser()
+            .use(modules.rehypeAutolinkHeadings, { behaviour: 'wrap' })
+        } else {
+          this._parser = this._parser()
+            .use(modules.rehypeAutolinkHeadings, { content: (node) => h('span', hlinks) })
+        }
+      }
+    },
+    setMinimalHeaderLevel() {
+      const hmin = (this.hmin ?? 1) - 1;
+      if (hmin == 0) {
+        return;
+      }
+      this._parser = this._parser().use(modules.rehypeShiftHeading, { shift: hmin })
+    }
+  };
+
+  static async sanitize(html) {
+
+    await DOMPurify; // in case it's still loading
 
     return DOMPurify.sanitize(html);
   }
 };
 
-export class MarkdownSpan extends MarkdownElement {
+export class RemarkSpan extends RemarkElement {
   constructor() {
     super();
   }
 
-  _parse() {
-    return marked.parseInline(this._mdContent);
+  async _parse() {
+    return this._parser.process(this._mdContent);
   }
 
-  static renderer = {
-    codespan(code) {
-      if (this._contentFromHTML) {
-        // Inline HTML code needs to be escaped to not be parsed as HTML by the browser
-        // This results in marked double-escaping it, so we need to unescape it
-        code = code.replace(/&amp;(?=[lg]t;)/g, "&");
-      }
-      else {
-        // Remote code may include characters that need to be escaped to be visible in HTML
-        code = code.replace(/</g, "&lt;");
-      }
-
-      return `<code>${code}</code>`;
-    }
-  }
 }
 
-export class MarkdownBlock extends MarkdownElement {
+export class RemarkBlock extends RemarkElement {
   constructor() {
     super();
   }
@@ -184,55 +184,9 @@ export class MarkdownBlock extends MarkdownElement {
     this.setAttribute("hlinks", value);
   }
 
-  _parse() {
-    return marked.parse(this._mdContent);
+  async _parse() {
+    return this._parser.process(this._mdContent);
   }
-
-  static renderer = Object.assign({
-    heading(text, level, _raw, slugger) {
-      level = Math.min(6, level + (this.hmin - 1));
-      const id = slugger.slug(text);
-      const hlinks = this.hlinks;
-
-      let content;
-
-      if (hlinks === null) {
-        // No heading links
-        content = text;
-      }
-      else {
-        content = `<a href="#${id}" class="anchor">`;
-
-        if (hlinks === "") {
-          // Heading content is the link
-          content += text + "</a>";
-        }
-        else {
-          // Headings are prepended with a linked symbol
-          content += hlinks + "</a>" + text;
-        }
-      }
-
-      return `
-				<h${level} id="${id}">
-					${content}
-				</h${level}>`;
-    },
-
-    code(code, language, escaped) {
-      if (this._contentFromHTML) {
-        // Inline HTML code needs to be escaped to not be parsed as HTML by the browser
-        // This results in marked double-escaping it, so we need to unescape it
-        code = code.replace(/&amp;(?=[lg]t;)/g, "&");
-      }
-      else {
-        // Remote code may include characters that need to be escaped to be visible in HTML
-        code = code.replace(/</g, "&lt;");
-      }
-
-      return `<pre class="language-${language}"><code>${code}</code></pre>`;
-    }
-  }, MarkdownSpan.renderer);
 
   static get observedAttributes() {
     return ["src", "hmin", "hlinks"];
@@ -287,5 +241,5 @@ export class MarkdownBlock extends MarkdownElement {
 }
 
 
-customElements.define("md-block", MarkdownBlock);
-customElements.define("md-span", MarkdownSpan);
+customElements.define("remark-block", RemarkBlock);
+customElements.define("remark-span", RemarkSpan);

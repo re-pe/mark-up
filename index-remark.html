@@ -14,12 +14,12 @@
 
 <body>
   <header>
-    <h1>&lt;re-mark></h1>
+    <h1>&lt;remark-block></h1>
 
-    <md-block>
+    <remark-block>
       Render styleable Markdown in your HTML.
       Uses [remark](https://remark.js.org/) under the hood.
-    </md-block>
+    </remark-block>
   </header>
 
   <nav>
@@ -32,9 +32,9 @@
   </nav>
 
   <main>
-    <md-block src="README.md" hmin="2">
+    <remark-block src="README.md" hmin="2">
       [Documentation on GitHub](https://github.com/leaverou/md-block/#readme)
-    </md-block>
+    </remark-block>
 
     <section>
       <h2 id="demos">Demos</h2>
@@ -42,7 +42,7 @@
       <p>Block</p>
 
       <script type="text/html" class="md-block-demo">
-        <md-block>
+        <remark-block>
         # Heading
 
         Text **bold text** *italic text* ~strike~
@@ -57,47 +57,47 @@
 
           * List item 1
           * List item 2
-        </md-block>
+        </remark-block>
       </script>
 
       <p>Block with incorrect src and fallback content</p>
 
       <script type="text/html" class="md-block-demo">
-        <md-block src="nonexistent.md">
+        <remark-block src="nonexistent.md">
           `nonexistent.md` was *not* found
-        </md-block>
+        </remark-block>
       </script>
 
       <p>Minimum heading level:</p>
 
       <script type="text/html" class="md-block-demo">
-        <md-block hmin="3">
+        <remark-block hmin="3">
           # Heading 3
           ## Heading 4
           ### Heading 5
           #### Heading 6
           ##### Still heading 6
-        </md-block>
+        </remark-block>
       </script>
 
       <p>Heading links</p>
       <script type="text/html" class="md-block-demo">
-        <md-block hlinks>
+        <remark-block hlinks>
           # Heading 1
           ## Heading 2
           ### Heading 3
-        </md-block>
-        <md-block hlinks="§">
+        </remark-block>
+        <remark-block hlinks="§">
           # Heading 1
           ## Heading 2
           ### Heading 3
-        </md-block>
+        </remark-block>
       </script>
 
       <p>Inline. Note that block level syntax like headings, code blocks, or lists is not processed</p>
 
       <script type="text/html" class="md-block-demo">
-        <md-span>
+        <remark-span>
           # Heading
 
           Text **bold text** *italic text* ~strike~
@@ -112,14 +112,14 @@
 
           * List item 1
           * List item 2
-        </md-span>
+        </remark-span>
       </script>
 
-      <md-block>With and without [sanitization](#handling-untrusted-content).</md-block>
+      <remark-block>With and without [sanitization](#handling-untrusted-content).</remark-block>
 
       <script type="text/html" class="md-block-demo">
-        <md-block untrusted src="data:text/markdown,A [Click me](javascript:alert('hi'))"></md-block>
-        <md-block src="data:text/markdown,B [Click me](javascript:alert('hi'))"></md-block>
+        <remark-block untrusted src="data:text/markdown,A [Click me](javascript:alert('hi'))"></remark-block>
+        <remark-block src="data:text/markdown,B [Click me](javascript:alert('hi'))"></remark-block>
       </script>
 
       <p>View source for more demos!</p>
@@ -136,10 +136,10 @@
   </section>
 
   <footer>
-    <md-span>
+    <remark-span>
       Made in haste, by [Lea Verou](https://lea.verou.me). Use at your own risk.
       [Pull requests welcome](https://github.com/leaverou/md-block)
-    </md-span>
+    </remark-span>
   </footer>
 </body>
 

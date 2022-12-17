@@ -1,4 +1,4 @@
-import { URLs, MarkdownBlock, MarkdownSpan, MarkdownElement } from "./md-block.js";
+import { MarkdownBlock, MarkdownSpan, MarkdownElement } from "./md-block.js";
 
 import create from "./lib/blissv2/dom/create.js";
 
