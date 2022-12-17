@@ -1,3 +1,5 @@
+const { loadModules, require } = await import("./helpers.js")
+
 const MarkdownIt = (await import('./lib/markdown-it/markdown-it.bundle.js')).default;
 
 const moduleData = [
@@ -25,9 +27,23 @@ const moduleData = [
   { name: 'YAML', url: "./lib/markdown-it/yaml.bundle.js", f: m => m.default },
 ]
 
-const { loadModules } = await import("./helpers.js")
+export const modules = await loadModules(moduleData)
 
-const modules = await loadModules(moduleData)
+export const modulesOptions = {
+  MarkdownIt: { html: true, xhtmlOut: true, linkify: true, typography: true },
+  FrontMatter: { callback: (fm, token, state) => { 
+      mdParser.yaml = '';
+      if (fm) {
+        const yaml = modules.YAML.parse(fm);
+        console.log(`FrontMatter:\n`, yaml, yaml.title, yaml.b, yaml.tags);
+        mdParser.yaml = yaml;
+      }
+    }
+  },
+  // Metadata: { parseMetadata: YAML.load, meta },
+  Container: "spoiler",
+  MmdTable : { multiline: true, rowspan: true, headerless: true, multibody: true, autolabel: true }
+}
 
 modules.Replacements.replacements.push({
   name: 'allcaps',
@@ -36,58 +52,64 @@ modules.Replacements.replacements.push({
   default: true
 });
 
-export const mdParser = new MarkdownIt({
-  html: true,        // Enable HTML tags in source
-  xhtmlOut: true,
-  linkify: true,
-  typography: true,
-})
-  .use(modules.FrontMatter, {
-    callback: (fm, token, state) => {
-      mdParser.yaml = '';
-      if (fm) {
-        const yaml = modules.YAML.parse(fm);
-        console.log(`FrontMatter:\n`, yaml, yaml.title, yaml.b, yaml.tags);
-        mdParser.yaml = yaml;
-      }
-    }
-  })
-  // .use(Metadata, {
-  //   // parseMetadata: YAML.parse,
-  //   parseMetadata: YAML.load,
-  //   meta
-  // })
-  .use(modules.Replacements)
-  .use(modules.Sub)
-  .use(modules.Sup)
-  .use(modules.Footnote)
-  .use(modules.Deflist)
-  .use(modules.Abbr)
-  .use(modules.Emoji)
-  .use(modules.Container, "spoiler")
-  .use(modules.BracketSpan)
-  .use(modules.Insert)
-  .use(modules.Mark)
-  .use(modules.Admon)
-  .use(modules.GridTable)
-  .use(modules.MmdTable, {
-    multiline: true,
-    rowspan: true,
-    headerless: true,
-    multibody: true,
-    autolabel: true,
-  })
-  .use(modules.YamlTable)
-  .use(modules.Attrs)
-  .use(modules.Aside)
-  .use(modules.Anchor, {
-    permalink: modules.Anchor.permalink.linkInsideHeader({
-      symbol: '$',
-      placement: 'before'
-    })
-  })
-  .use(modules.Toc)
-  .disable('anchor');
-// .use(TocDoneRight)
+export function loadParser() {
 
-export default { mdParser };
+  const mdParser = new MarkdownIt({
+    html: true,        // Enable HTML tags in source
+    xhtmlOut: true,
+    linkify: true,
+    typography: true,
+  })
+    .use(modules.FrontMatter, {
+      callback: (fm, token, state) => {
+        mdParser.yaml = '';
+        if (fm) {
+          const yaml = modules.YAML.parse(fm);
+          console.log(`FrontMatter:\n`, yaml, yaml.title, yaml.b, yaml.tags);
+          mdParser.yaml = yaml;
+        }
+      }
+    })
+    // .use(Metadata, {
+    //   parseMetadata: YAML.load,
+    //   meta
+    // })
+    .use(modules.Replacements)
+    .use(modules.Sub)
+    .use(modules.Sup)
+    .use(modules.Footnote)
+    .use(modules.Deflist)
+    .use(modules.Abbr)
+    .use(modules.Emoji)
+    .use(modules.Container, "spoiler")
+    .use(modules.BracketSpan)
+    .use(modules.Insert)
+    .use(modules.Mark)
+    .use(modules.Admon)
+    .use(modules.GridTable)
+    .use(modules.MmdTable, {
+      multiline: true,
+      rowspan: true,
+      headerless: true,
+      multibody: true,
+      autolabel: true,
+    })
+    .use(modules.YamlTable)
+    .use(modules.Attrs)
+    .use(modules.Aside)
+    // .use(modules.Anchor, {
+    //   permalink: modules.Anchor.permalink.headerLink()
+    // })
+    // .use(modules.Anchor, {
+    //   permalink: modules.Anchor.permalink.linkInsideHeader({
+    //     symbol: '$',
+    //     placement: 'before'
+    //   })
+    // })
+    .use(modules.Toc);
+    // .disable('anchor');
+  // .use(TocDoneRight)
+  return mdParser;
+}
+
+export default { loadParser, modules };

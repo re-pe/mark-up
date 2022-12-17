@@ -3,12 +3,12 @@
  * @author Lea Verou
  */
 
-const mdParser = (await import('./prepareMarkdownIt.js')).mdParser;
+const { loadParser, modules } = await import('./prepareMarkdownIt.js');
 const DOMPurify = (await import('./lib/purify.es.js')).default;
 let Prism = window.Prism;
 
 export const URLs = {
-  MarkdownIt: "./prepareMarkdownIt.js",
+  mdParser: "./prepareMarkdownIt.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
@@ -18,13 +18,13 @@ export class MdItElement extends HTMLElement {
   constructor() {
     super();
 
-    this.renderer = Object.assign({}, this.constructor.renderer);
+    this.parsingOptions = Object.assign({}, this.constructor.parsingOptions);
 
-    for (let property in this.renderer) {
-      this.renderer[property] = this.renderer[property].bind(this);
+    for (let property in this.parsingOptions) {
+      this.parsingOptions[property] = this.parsingOptions[property].bind(this);
     }
 
-    this._parser = mdParser;
+    this._parser = loadParser();
   }
 
   get rendered() {
@@ -106,6 +106,35 @@ export class MdItElement extends HTMLElement {
     this.dispatchEvent(event);
   }
 
+  static parsingOptions = {
+    setAnchor() {
+      const hlinks = this.hlinks ?? null;
+
+      if (hlinks !== null) {
+        if (hlinks === "") {
+          this._parser.use(modules.Anchor, {
+            permalink: modules.Anchor.permalink.headerLink()
+          })
+        } else {
+          this._parser.use(modules.Anchor, {
+            permalink: modules.Anchor.permalink.linkInsideHeader({
+              symbol: hlinks,
+              placement: 'before'
+            })
+          })
+        }
+      }
+    },
+    setMinimalHeaderLevel(content) {
+      const hmin = (this.hmin  ?? 1) - 1;
+      if (hmin == 0) {
+        return content;
+      }
+      const newContent = content.replaceAll(/^(#{1,6})/gm, (_, p1) => '#'.repeat(p1.length > (6 - hmin) ? 6 : p1.length + hmin));
+      return newContent;
+    }
+  };
+
   static async sanitize(html) {
 
     await DOMPurify; // in case it's still loading
@@ -121,22 +150,6 @@ export class MdItSpan extends MdItElement {
 
   _parse() {
     return this._parser.renderInline(this._mdContent);
-  }
-
-  static renderer = {
-    codespan(code) {
-      if (this._contentFromHTML) {
-        // Inline HTML code needs to be escaped to not be parsed as HTML by the browser
-        // This results in marked double-escaping it, so we need to unescape it
-        code = code.replace(/&amp;(?=[lg]t;)/g, "&");
-      }
-      else {
-        // Remote code may include characters that need to be escaped to be visible in HTML
-        code = code.replace(/</g, "&lt;");
-      }
-
-      return `<code>${code}</code>`;
-    }
   }
 }
 
@@ -170,53 +183,10 @@ export class MdItBlock extends MdItElement {
   }
 
   _parse() {
-    return this._parser.render(this._mdContent);
+    const tempContent = this.parsingOptions.setMinimalHeaderLevel(this._mdContent)
+    this.parsingOptions.setAnchor();
+    return this._parser.render(tempContent);
   }
-
-  static renderer = Object.assign({
-    heading(text, level, _raw, slugger) {
-      level = Math.min(6, level + (this.hmin - 1));
-      const id = slugger.slug(text);
-      const hlinks = this.hlinks;
-
-      let content;
-
-      if (hlinks === null) {
-        // No heading links
-        content = text;
-      } else {
-        content = `<a href="#${id}" class="anchor">`;
-
-        if (hlinks === "") {
-          // Heading content is the link
-          content += text + "</a>";
-        }
-        else {
-          // Headings are prepended with a linked symbol
-          content += hlinks + "</a>" + text;
-        }
-      }
-
-      return `
-        <h${level} id="${id}">
-          ${content}
-        </h${level}>`;
-    },
-
-    code(code, language, escaped) {
-      if (this._contentFromHTML) {
-        // Inline HTML code needs to be escaped to not be parsed as HTML by the browser
-        // This results in marked double-escaping it, so we need to unescape it
-        code = code.replace(/&amp;(?=[lg]t;)/g, "&");
-      }
-      else {
-        // Remote code may include characters that need to be escaped to be visible in HTML
-        code = code.replace(/</g, "&lt;");
-      }
-
-      return `<pre class="language-${language}"><code>${code}</code></pre>`;
-    }
-  }, MdItSpan.renderer);
 
   static get observedAttributes() {
     return ["src", "hmin", "hlinks"];
@@ -258,7 +228,7 @@ export class MdItBlock extends MdItElement {
         break;
       case "hmin":
         if (newValue > 0) {
-          this._hmin = +newValue;
+          this._hmin = newValue;
 
           this.render();
         }
