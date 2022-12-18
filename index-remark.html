@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="application-name" content="demo-remark" />
+  <title>re-mark: Render styleable Markdown in your HTML</title>
+  <link rel="icon" href="img/logo.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+  <script src="js/main.js" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <h1>&lt;remark-block></h1>
+
+    <remark-block>
+      Render styleable Markdown in your HTML.
+      Uses [remark](https://remark.js.org/) under the hood.
+    </remark-block>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#usage">Usage</a>
+    <a href="#api">API</a>
+    <a href="#recipes">Recipes</a>
+    <a href="tests.html">Tests</a>
+    <a href="https://github.com/leaverou/md-block">GitHub</a>
+  </nav>
+
+  <main>
+    <remark-block src="README.md" hmin="2">
+      [Documentation on GitHub](https://github.com/leaverou/md-block/#readme)
+    </remark-block>
+
+    <section>
+      <h2 id="demos">Demos</h2>
+
+      <p>Block</p>
+
+      <script type="text/html" class="md-block-demo">
+        <remark-block>
+        # Heading
+
+        Text **bold text** *italic text* ~strike~
+
+        ```js
+        test.foo();
+        ```
+
+        ```html
+        &lt;foo>
+        ```
+
+          * List item 1
+          * List item 2
+        </remark-block>
+      </script>
+
+      <p>Block with incorrect src and fallback content</p>
+
+      <script type="text/html" class="md-block-demo">
+        <remark-block src="nonexistent.md">
+          `nonexistent.md` was *not* found
+        </remark-block>
+      </script>
+
+      <p>Minimum heading level:</p>
+
+      <script type="text/html" class="md-block-demo">
+        <remark-block hmin="3">
+          # Heading 3
+          ## Heading 4
+          ### Heading 5
+          #### Heading 6
+          ##### Still heading 6
+        </remark-block>
+      </script>
+
+      <p>Heading links</p>
+      <script type="text/html" class="md-block-demo">
+        <remark-block hlinks>
+          # Heading 1
+          ## Heading 2
+          ### Heading 3
+        </remark-block>
+        <remark-block hlinks="§">
+          # Heading 1
+          ## Heading 2
+          ### Heading 3
+        </remark-block>
+      </script>
+
+      <p>Inline. Note that block level syntax like headings, code blocks, or lists is not processed</p>
+
+      <script type="text/html" class="md-block-demo">
+        <remark-span>
+          # Heading
+
+          Text **bold text** *italic text* ~strike~
+
+          ```js
+          test.foo();
+          ```
+
+          ```html
+          &lt;foo>
+          ```
+
+          * List item 1
+          * List item 2
+        </remark-span>
+      </script>
+
+      <remark-block>With and without [sanitization](#handling-untrusted-content).</remark-block>
+
+      <script type="text/html" class="md-block-demo">
+        <remark-block untrusted src="data:text/markdown,A [Click me](javascript:alert('hi'))"></remark-block>
+        <remark-block src="data:text/markdown,B [Click me](javascript:alert('hi'))"></remark-block>
+      </script>
+
+      <p>View source for more demos!</p>
+    </section>
+
+  </main>
+
+  <section id="repl">
+    <h2>Live demo</h2>
+    <form id="repl_container"><pre data-title="Input HTML"><code><span class="token punctuation">&lt;</span><select name="tag" class="token tag"><option>md-block</option><option>md-span</option></select> <input name="attributes" placeholder="foo=&quot;bar&quot; baz=&quot;quux&quot;"><span class="token punctuation">&gt;</span><textarea name="contents" class="prism-live language-markdown">*This* is `md-block`</textarea><span class="token punctuation">&lt;/</span><output class="token tag" id="end_tag"></output><span class="token punctuation">&gt;</span></code></pre>
+      <output id="output_html" data-title="Output HTML"><pre class="language-markup"><code></code></pre></output>
+      <output id="rendering" data-title="Rendering"></output>
+    </form>
+  </section>
+
+  <footer>
+    <remark-span>
+      Made in haste, by [Lea Verou](https://lea.verou.me). Use at your own risk.
+      [Pull requests welcome](https://github.com/leaverou/md-block)
+    </remark-span>
+  </footer>
+</body>
+
+</html>

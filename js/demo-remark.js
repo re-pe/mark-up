@@ -1,9 +1,9 @@
-import { MarkdownBlock, MarkdownSpan, MarkdownElement } from "./md-block.js";
+import { URLs, RemarkBlock, RemarkSpan, RemarkElement } from "./remark-block.js";
 
 import create from "./lib/blissv2/dom/create.js";
 
-const importURL = "./md-block.js";
-let js = `import {MarkdownBlock, MarkdownSpan, MarkdownElement} from "${importURL}";`;
+const importURL = "./remark-block.js";
+let js = `import {RemarkBlock, RemarkSpan, RemarkElement} from "${importURL}";`;
 
 for (let script of document.querySelectorAll("script[type='text/html'].md-block-demo")) {
   let html = script.textContent;

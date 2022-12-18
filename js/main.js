@@ -6,6 +6,7 @@ const scriptList = {
   'index': './md-block.js',
   'demo-marked': './demo.js',
   'demo-markdown-it': './demo-markdown-it.js',
+  'demo-remark': './demo-remark.js',
 };
 
 const { getApplicationName } = await import("./helpers.js");
