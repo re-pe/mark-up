@@ -1,5 +1,5 @@
 // const mdParser = (await import('https://cdn.jsdelivr.net/npm/markdown-it/+esm')).default;
-export const mdParser = (await import("./lib/marked.esm.js")).marked;
+export const mdParser = (await import("./lib/marked/marked.esm.js")).marked;
 
 mdParser.setOptions({
   gfm: true,
