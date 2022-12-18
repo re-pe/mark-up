@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <title>md-block Tests</title>
   <link rel="icon" href="logo.svg">
-  <link rel="stylesheet" href="https://test.mavo.io/style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/blissfuljs/1.0.4/bliss.min.js"></script>
+  <link rel="stylesheet" href="css/test.mavo.io.style.css" />
+  <script src="js/lib//bliss.js"></script>
   <style>
     script[type="text/html"] {
       display: block;
@@ -115,10 +115,11 @@
       console.log(test, 1, ref)
       return test == ref;
     }
+    window.indexFileName = 'index-marked.html';
   </script>
 
-  <script src="https://test.mavo.io/test.js"></script>
-  <script src="md-block.js" type="module"></script>
+  <script src="js/lib/test.mavo.io.tests.js"></script>
+  <script src="js/md-block.js" type="module"></script>
 
 </body>
 
