@@ -3,12 +3,12 @@
  * @author Lea Verou
  */
 
-const { loadParser, modules } = await import('./prepareMarkdownIt.js');
+const { loadParser, modules } = await import('./load-markdown-it.js');
 const DOMPurify = (await import('./lib/purify.es.js')).default;
 let Prism = window.Prism;
 
 export const URLs = {
-  mdParser: "./prepareMarkdownIt.js",
+  mdParser: "./load-markdown-it.js.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
