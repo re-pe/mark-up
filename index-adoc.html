@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="application-name" content="demo-asciidoc" />
+  <title>ascii-doc: Render styleable Asciidoc in your HTML</title>
+  <link rel="icon" href="img/logo.svg" />
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/main.js" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <h1>&lt;ascii-doc></h1>
+
+    <ascii-doc>
+      Render AsciiDoc in your HTML.
+      Uses https://asciidoctor.org/[AsciiDoctor].
+    </ascii-doc>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#usage">Usage</a>
+    <a href="#api">API</a>
+    <a href="#recipes">Recipes</a>
+    <a href="tests.html">Tests</a>
+    <a href="https://github.com/leaverou/md-block">GitHub</a>
+  </nav>
+
+  <main>
+    <ascii-doc>
+      Render AsciiDoc in your HTML.
+      Uses https://asciidoctor.org/[AsciiDoctor].
+
+      * [*] checked
+      * [x] also *checked*
+      * [ ] not _checked_
+      * normal [.underline]#list item#
+    </ascii-doc>
+    <ascii-doc src="extended_syntax1.adoc">
+      https://github.com/leaverou/md-block/#readme[Documentation on GitHub]
+    </ascii-doc>
+
+  </main>
+
+  <footer>
+    <ascii-doc>
+      Made in haste, by https://lea.verou.me[Lea Verou]. Use at your own risk.
+      https://github.com/leaverou/md-block[Pull requests welcome]
+    </ascii-doc>
+  </footer>
+</body>
+
+</html>

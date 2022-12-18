@@ -7,6 +7,7 @@ const scriptList = {
   'demo-marked': './demo.js',
   'demo-markdown-it': './demo-markdown-it.js',
   'demo-remark': './demo-remark.js',
+  'demo-asciidoc': './ascii-doc.js',
 };
 
 const { getApplicationName } = await import("./helpers.js");
