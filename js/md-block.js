@@ -92,7 +92,9 @@ export class MarkdownElement extends HTMLElement {
 
     if (Prism) {
       await Prism; // in case it's still loading
-      Prism.highlightAllUnder(this);
+      if (Prism.highlightAllUnder) {
+        Prism.highlightAllUnder(this);
+      }
     }
 
     if (this.src) {
