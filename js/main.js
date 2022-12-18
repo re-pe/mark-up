@@ -5,6 +5,7 @@ import './lib/prism-live.js';
 const scriptList = {
   'index': './md-block.js',
   'demo-marked': './demo.js',
+  'demo-markdown-it': './demo-markdown-it.js',
 };
 
 const { getApplicationName } = await import("./helpers.js");
