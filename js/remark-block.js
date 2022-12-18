@@ -3,12 +3,12 @@
  * @author Lea Verou
  */
 
-const { h, loadParser, modules } = await import('./prepareRemark.js');
+const { h, loadParser, modules } = await import('./load-remark.js');
 const DOMPurify = (await import('./lib/purify.es.js')).default;
 let Prism = window.Prism;
 
 export const URLs = {
-  mdParser: "./prepareRemark.js",
+  mdParser: "./load-remark.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
