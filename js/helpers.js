@@ -25,21 +25,21 @@ export async function require(path) {
   return exports;
 }
 
-export async function loadModules(moduleData) {
-  const moduleDataToImport = Object.values(moduleData.filter(module => module.type !== 'cjs'));
-  const moduleDataToRequire = Object.values(moduleData.filter(module => module.type === 'cjs'));
+export async function loadModules(moduleDataList) {
+  const moduleDataToImport = Object.values(moduleDataList.filter(moduleData => moduleData.type !== 'cjs'));
+  const moduleDataToRequire = Object.values(moduleDataList.filter(moduleData => moduleData.type === 'cjs'));
 
-  const moduleNamesToImport = moduleDataToImport.map(module => module.name);
-  const moduleNamesToRequire = moduleDataToRequire.map(module => module.name);
+  const moduleNamesToImport = moduleDataToImport.map(moduleData => moduleData.name);
+  const moduleNamesToRequire = moduleDataToRequire.map(moduleData => moduleData.name);
 
-  const importPromises = moduleDataToImport.map((module) => import(module.url).then(module.f));
-  const requirePromises = moduleDataToRequire.map((module) => require(module.url));
+  const importPromises = moduleDataToImport.map((moduleData) => import(moduleData.path).then(module => module[moduleData.import]));
+  const requirePromises = moduleDataToRequire.map((moduleData) => require(moduleData.path));
 
-  const importModuleData = await Promise.all(importPromises);
-  const requireModuleData = await Promise.all(requirePromises);
+  const importModuleList = await Promise.all(importPromises);
+  const requireModuleList = await Promise.all(requirePromises);
 
-  const importModules = Object.fromEntries(moduleNamesToImport.map((_, i) => [moduleNamesToImport[i], importModuleData[i]]));
-  const requireModules = Object.fromEntries(moduleNamesToRequire.map((_, i) => [moduleNamesToRequire[i], requireModuleData[i]]));
+  const importModules = Object.fromEntries(moduleNamesToImport.map((_, i) => [moduleNamesToImport[i], importModuleList[i]]));
+  const requireModules = Object.fromEntries(moduleNamesToRequire.map((_, i) => [moduleNamesToRequire[i], requireModuleList[i]]));
 
   return Object.assign({}, importModules, requireModules);
 }

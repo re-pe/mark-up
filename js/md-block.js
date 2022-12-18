@@ -3,13 +3,13 @@
  * @author Lea Verou
  */
 
-const mdParser = (await import('./prepareMarked.js')).mdParser;
+const mdParser = (await import('./load-marked.js')).mdParser;
 const DOMPurify = (await import('./lib/purify.es.js')).default;
 
 let Prism = window.Prism;
 
 export const URLs = {
-  mdParser: "./lib/marked.esm.js",
+  mdParser: "./load-marked.js",
   DOMPurify: "./lib/purify.es.js"
 }
 
@@ -92,7 +92,9 @@ export class MarkdownElement extends HTMLElement {
 
     if (Prism) {
       await Prism; // in case it's still loading
-      Prism.highlightAllUnder(this);
+      if (Prism.highlightAllUnder) {
+        Prism.highlightAllUnder(this);
+      }
     }
 
     if (this.src) {
