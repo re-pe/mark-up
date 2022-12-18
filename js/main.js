@@ -4,7 +4,7 @@ import './lib/prism-live.js';
 
 const scriptList = {
   'index': './md-block.js',
-  'demo-marked': './demo.js',
+  'demo-marked': './demo-marked.js',
   'demo-markdown-it': './demo-markdown-it.js',
   'demo-remark': './demo-remark.js',
   'demo-asciidoc': './ascii-doc.js',
