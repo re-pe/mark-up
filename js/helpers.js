@@ -32,8 +32,8 @@ export async function loadModules(moduleDataList) {
   const moduleNamesToImport = moduleDataToImport.map(moduleData => moduleData.name);
   const moduleNamesToRequire = moduleDataToRequire.map(moduleData => moduleData.name);
 
-  const importPromises = moduleDataToImport.map((moduleData) => import(moduleData.path).then(module => module[moduleData.import]));
-  const requirePromises = moduleDataToRequire.map((moduleData) => require(moduleData.path));
+  const importPromises = moduleDataToImport.map(moduleData => import(moduleData.path).then(module => module[moduleData.import]));
+  const requirePromises = moduleDataToRequire.map(moduleData => require(moduleData.path));
 
   const importModuleList = await Promise.all(importPromises);
   const requireModuleList = await Promise.all(requirePromises);
