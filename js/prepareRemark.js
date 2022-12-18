@@ -1,14 +1,6 @@
 
-//const { remark } = await import('https://esm.sh/remark@14?bundle');
 const { remark } = await import('./lib/remark/remark.bundle.js');
 export const h = (await import('./lib/remark/hastscript.bundle.js')).h;
-/*
-const moduleData = [
-  { name: 'remarkGfm', url: "https://esm.sh/remark-gfm@3?bundle", f: m => m.default },
-  { name: 'remarkToc', url: "https://esm.sh/remark-toc@8?bundle", f: m => m.default },
-  { name: 'remarkRehype', url: "https://esm.sh/remark-rehype@10?bundle", f: m => m.default },
-  { name: 'rehypeStringify', url: "https://esm.sh/rehype-stringify@9?bundle", f: m => m.default },
-]*/
 
 const moduleData = [
   { name: 'remarkGfm', url: "./lib/remark/remark-gfm.bundle.js", f: m => m.default },
