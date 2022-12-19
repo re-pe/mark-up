@@ -12,6 +12,10 @@ export const URLs = {
   DOMPurify: "./lib/purify.es.js"
 }
 
+// Hack!!! Do not do this in production application!!!
+const { defaultSchema } = await import('./lib/remark/rehype-sanitize.bundle.js')
+defaultSchema.clobberPrefix = '';
+
 const { deIndent } = await import("./helpers.js");
 
 export class RemarkElement extends HTMLElement {
@@ -68,7 +72,7 @@ export class RemarkElement extends HTMLElement {
     this.parsingOptions.setMinimalHeaderLevel();
     this.parsingOptions.setAnchor();
     this._parser = this._parser()
-      .use(modules.rehypeSanitize)
+      .use(modules.rehypeSanitize, { ...defaultSchema })
       .use(modules.rehypeStringify);
 
     let html = await this._parse();
