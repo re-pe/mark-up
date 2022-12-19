@@ -1,7 +1,6 @@
 const { loadModules, require } = await import("./helpers.js")
 
 const MarkdownIt = (await import('./lib/markdown-it/markdown-it.bundle.js')).default;
-const YAML = (await import('./lib/markdown-it/yaml.bundle.js')).default;
 
 const moduleDataList = [
   { name: 'FrontMatter', path: "./lib/markdown-it/markdown-it-front-matter.bundle.js", import: 'default' },
@@ -24,11 +23,16 @@ const moduleDataList = [
   { name: 'Attrs', path: "./lib/markdown-it/markdown-it-attr.bundle.js", import: 'default' },
   { name: 'Aside', path: "./lib/markdown-it/markdown-it-markua-aside.bundle.js", import: 'asidePlugin' },
   { name: 'Anchor', path: "./lib/markdown-it/markdown-it-anchor.bundle.js", import: 'default' },
+  { name: 'Slugify', path: "./lib/markdown-it/slugify.bundle.js", import: 'default' },
   { name: 'Toc', path: "./lib/markdown-it/markdown-it-table-of-contents.bundle.js", import: 'default' },
+  { name: 'YAML', path: "./lib/markdown-it/yaml.bundle.js", import: 'default' },
   // TocDoneRight
 ]
 
 export const modules = await loadModules(moduleDataList)
+
+const YAML = modules.YAML;
+const Slugify = modules.Slugify;
 
 export const modulesOptions = {
   MarkdownIt: { html: true, xhtmlOut: true, linkify: true, typography: true },
@@ -44,9 +48,11 @@ export const modulesOptions = {
   // Metadata: { parseMetadata: YAML.load, meta },
   Container: "spoiler",
   MmdTable : { multiline: true, rowspan: true, headerless: true, multibody: true, autolabel: true },
-  Anchor: { defer: true },
+  Anchor: { slugify: s => Slugify(s) },
   // Anchor: { permalink: modules.Anchor.permalink.headerLink() },
   // Anchor: { permalink: modules.Anchor.permalink.linkInsideHeader({ symbol: '$', placement: 'before' }) },
+  Slugify: { defer: true },
+  YAML: { defer: true },
 }
 
 modules.Replacements.replacements.push({
