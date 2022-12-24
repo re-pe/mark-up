@@ -1,35 +1,34 @@
-const { loadModules, require } = await import("./helpers.js")
-
 const MarkdownIt = (await import('./lib/markdown-it/markdown-it.bundle.js')).default;
 
 const moduleDataList = [
-  { name: 'FrontMatter', path: "./lib/markdown-it/markdown-it-front-matter.bundle.js", import: 'default' },
-  // { name: 'Metadata', path: "./lib/markdown-it/markdown-it-metadata-block.bundle.js", import: 'default' },
-  { name: 'Replacements', path: "./lib/markdown-it/markdown-it-replacements.bundle.js", import: 'default' },
-  { name: 'Sub', path: "./lib/markdown-it/markdown-it-sub.bundle.js", import: 'default' },
-  { name: 'Sup', path: "./lib/markdown-it/markdown-it-sup.bundle.js", import: 'default' },
-  { name: 'Footnote', path: "./lib/markdown-it/markdown-it-footnote.bundle.js", import: 'default' },
-  { name: 'Deflist', path: "./lib/markdown-it/markdown-it-deflist.bundle.js", import: 'default' },
-  { name: 'Abbr', path: "./lib/markdown-it/markdown-it-abbr.bundle.js", import: 'default' },
-  { name: 'Emoji', path: "./lib/markdown-it/markdown-it-emoji.bundle.js", import: 'default' },
-  { name: 'Container', path: "./lib/markdown-it/markdown-it-bracketed-spans.bundle.js", import: 'default' },
-  { name: 'BracketSpan', path: "./lib/markdown-it/markdown-it-container.bundle.js", import: 'default' },
-  { name: 'Insert', path: "./lib/markdown-it/markdown-it-ins.bundle.js", import: 'default' },
-  { name: 'Mark', path: "./lib/markdown-it/markdown-it-mark.bundle.js", import: 'default' },
-  { name: 'Admon', path: "./lib/markdown-it/markdown-it-admon.bundle.js", import: 'default' },
-  { name: 'GridTable', path: "./lib/markdown-it/markdown-it-gridtables.bundle.js", import: 'default' },
-  { name: 'MmdTable', path: "./lib/markdown-it/markdown-it-multimd-table.bundle.js", import: 'default' },
-  { name: 'YamlTable', path: "./lib/markdown-it/markdown-it-complex-table.bundle.js", import: 'default' },
-  { name: 'Attrs', path: "./lib/markdown-it/markdown-it-attr.bundle.js", import: 'default' },
-  { name: 'Aside', path: "./lib/markdown-it/markdown-it-markua-aside.bundle.js", import: 'asidePlugin' },
-  { name: 'Anchor', path: "./lib/markdown-it/markdown-it-anchor.bundle.js", import: 'default' },
-  { name: 'Slugify', path: "./lib/markdown-it/slugify.bundle.js", import: 'default' },
-  { name: 'Toc', path: "./lib/markdown-it/markdown-it-table-of-contents.bundle.js", import: 'default' },
-  { name: 'YAML', path: "./lib/markdown-it/yaml.bundle.js", import: 'default' },
+  [ 'FrontMatter', (await import("./lib/markdown-it/markdown-it-front-matter.bundle.js")).default ],
+  // [ 'Metadata', (await import("./lib/markdown-it/markdown-it-metadata-block.bundle.js")).default ],
+  [ 'Replacements', (await import("./lib/markdown-it/markdown-it-replacements.bundle.js")).default ],
+  [ 'Sub', (await import("./lib/markdown-it/markdown-it-sub.bundle.js")).default ],
+  [ 'Sup', (await import("./lib/markdown-it/markdown-it-sup.bundle.js")).default ],
+  [ 'Footnote', (await import("./lib/markdown-it/markdown-it-footnote.bundle.js")).default ],
+  [ 'Deflist', (await import("./lib/markdown-it/markdown-it-deflist.bundle.js")).default ],
+  [ 'Abbr', (await import("./lib/markdown-it/markdown-it-abbr.bundle.js")).default ],
+  [ 'Emoji', (await import("./lib/markdown-it/markdown-it-emoji.bundle.js")).default ],
+  [ 'Container', (await import("./lib/markdown-it/markdown-it-bracketed-spans.bundle.js")).default ],
+  [ 'BracketSpan', (await import("./lib/markdown-it/markdown-it-container.bundle.js")).default ],
+  [ 'Insert', (await import("./lib/markdown-it/markdown-it-ins.bundle.js")).default ],
+  [ 'Mark', (await import("./lib/markdown-it/markdown-it-mark.bundle.js")).default ],
+  [ 'Admon', (await import("./lib/markdown-it/markdown-it-admon.bundle.js")).default ],
+  [ 'MmdTable', (await import("./lib/markdown-it/markdown-it-multimd-table.bundle.js")).default ],
+  [ 'YamlTable', (await import("./lib/markdown-it/markdown-it-complex-table.bundle.js")).default ],
+  [ 'GridTable', (await import("./lib/markdown-it/markdown-it-gridtables.bundle.js")).default ],
+  [ 'Attrs', (await import("./lib/markdown-it/markdown-it-attr.bundle.js")).default ],
+  [ 'Aside', (await import("./lib/markdown-it/markdown-it-markua-aside.bundle.js")).asidePlugin ],
+  [ 'Anchor', (await import("./lib/markdown-it/markdown-it-anchor.bundle.js")).default ],
+  [ 'Slugify', (await import("./lib/markdown-it/slugify.bundle.js")).default ],
+  [ 'Toc', (await import("./lib/markdown-it/markdown-it-table-of-contents.bundle.js")).default ],
+  [ 'Replacements', (await import("./lib/markdown-it/markdown-it-replacements.bundle.js")).default ],
+  [ 'YAML', (await import("./lib/markdown-it/yaml.bundle.js")).default ],
   // TocDoneRight
-]
+];
 
-export const modules = await loadModules(moduleDataList)
+export const modules = Object.fromEntries(moduleDataList);
 
 const YAML = modules.YAML;
 const Slugify = modules.Slugify;
@@ -72,13 +71,13 @@ export function loadParser() {
   })
 
   moduleDataList.forEach(moduleData => {
-    if (modulesOptions[moduleData.name]) {
-      if (modulesOptions[moduleData.name].defer) {
+    if (modulesOptions[moduleData[0]]) {
+      if (modulesOptions[moduleData[0]].defer) {
         return;
       }
-      mdParser.use(modules[moduleData.name], modulesOptions[moduleData.name])
+      mdParser.use(modules[moduleData[0]], modulesOptions[moduleData[0]])
     } else {
-      mdParser.use(modules[moduleData.name])
+      mdParser.use(modules[moduleData[0]])
     }
   })
 
