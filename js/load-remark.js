@@ -2,17 +2,6 @@
 const { remark } = await import('./lib/remark/remark.bundle.js');
 export const h = (await import('./lib/remark/hastscript.bundle.js')).h;
 
-// const moduleDataList = [
-//   { name: 'remarkGfm', path: "./lib/remark/remark-gfm.bundle.js", import: 'default' },
-//   { name: 'remarkToc', path: "./lib/remark/remark-toc.bundle.js", import: 'default' },
-//   { name: 'remarkRehype', path: "./lib/remark/remark-rehype.bundle.js", import: 'default' },
-//   { name: 'rehypeSlug', path: "./lib/remark/rehype-slug.bundle.js", import: 'default' },
-//   { name: 'rehypeShiftHeading', path: "./lib/remark/rehype-shift-heading.bundle.js", import: 'default' },
-//   { name: 'rehypeAutolinkHeadings', path: "./lib/remark/rehype-autolink-headings.bundle.js", import: 'default' },
-//   { name: 'rehypeSanitize', path: "./lib/remark/rehype-sanitize.bundle.js", import: 'default' },
-//   { name: 'rehypeStringify', path: "./lib/remark/rehype-stringify.bundle.js", import: 'default' },
-// ]
-
 const moduleDataList = [
   [ 'remarkGfm', (await import("./lib/remark/remark-gfm.bundle.js")).default ],
   [ 'remarkToc', (await import("./lib/remark/remark-toc.bundle.js")).default ],
